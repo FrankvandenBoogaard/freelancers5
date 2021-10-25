@@ -3,7 +3,7 @@
 import ProjectListItem from './ProjectListItem';
 import { PlusIcon } from '@heroicons/react/solid';
 
-export default function ProjectList({ projects, setFormOpen }) {
+export default function ProjectList({ projects, setFormOpen, selectProject }) {
   return (
     <div className='bg-white shadow rounded-lg divide-y divide-gray-200'>
       <div className='px-4 py-5 sm:px-6'>
@@ -39,7 +39,7 @@ export default function ProjectList({ projects, setFormOpen }) {
             {projects.map((project) => {
               return (
                 <li key={project.id} className='bg-white'>
-                  <ProjectListItem project={project} />
+                  <ProjectListItem project={project} selectProject={selectProject} />
                 </li>
               );
             })}

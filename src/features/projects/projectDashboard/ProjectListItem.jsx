@@ -1,9 +1,16 @@
-import { CalendarIcon, CashIcon, ChevronRightIcon } from '@heroicons/react/solid';
+import {
+  CalendarIcon,
+  CashIcon,
+  ChevronRightIcon,
+} from '@heroicons/react/solid';
 import ProjectListFreelancer from './ProjectListFreelancer';
 
-export default function ProjectListItem({ project }) {
+export default function ProjectListItem({ project, selectProject }) {
   return (
-    <a href='#' className='block hover:bg-gray-50'>
+    <div
+      onClick={() => selectProject(project)}
+      className='block hover:bg-gray-50 cursor-pointer'
+    >
       <div className='px-4 py-4 flex items-center sm:px-6'>
         <div className='min-w-0 flex-1 sm:flex sm:items-center sm:justify-between'>
           <div className='truncate'>
@@ -18,7 +25,7 @@ export default function ProjectListItem({ project }) {
             <div className='mt-2 flex space-x-2'>
               <div className='flex items-center text-sm text-gray-500 space-x-2'>
                 <CalendarIcon
-                  className='flex-shrink-0 h-5 w-5 text-gray-400'
+                  className='flex-shrink-0 h-5 w-5 text-green-400'
                   aria-hidden='true'
                 />
                 <p>
@@ -27,19 +34,18 @@ export default function ProjectListItem({ project }) {
                 <p>
                   Finish: <time>{project.projectStart}</time>
                 </p>
-                
               </div>
               <div className='flex items-center text-sm text-gray-500 space-x-2'>
                 <CashIcon
-                  className='flex-shrink-0 h-5 w-5 text-gray-400'
+                  className='flex-shrink-0 h-5 w-5 text-green-400'
                   aria-hidden='true'
                 />
-                
+
                 <p>
-                  Purchase: <time>{project.projectStart}</time>
+                  Purchase: <time>{project.projectPurchase}</time>
                 </p>
                 <p>
-                  Sales: <time>{project.projectStart}</time>
+                  Sales: <time>{project.projectSales}</time>
                 </p>
               </div>
             </div>
@@ -62,6 +68,6 @@ export default function ProjectListItem({ project }) {
           />
         </div>
       </div>
-    </a>
+    </div>
   );
 }

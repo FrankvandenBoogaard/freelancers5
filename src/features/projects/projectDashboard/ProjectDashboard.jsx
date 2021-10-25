@@ -7,6 +7,36 @@ import { useState } from 'react';
 export default function ProjectDashboard({ setSidebarOpen }) {
   const [projects, setProjects] = useState(sampleData);
   const [formOpen, setFormOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  function handleCreateProject(project) {
+    setProjects([...projects, project]);
+  }
+
+  function handleSelectProject(project) {
+    setSelectedProject(project);
+    setFormOpen(true);
+  }
+
+  function handleCreateFormOpen() {
+    setSelectedProject(null);
+    setFormOpen(true);
+  }
+
+  function handleUpdateProject(updatedProject) {
+    setProjects(
+      projects.map((prj) =>
+        prj.id === updatedProject.id ? updatedProject : prj
+      )
+    );
+    setSelectedProject(null);
+  }
+
+  function handleDeleteProject(projectId) {
+    setProjects(projects.filter((prj) => prj.id !== projectId));
+    setFormOpen(false);
+  }
+
   return (
     <div className='md:pl-64 flex flex-col flex-1'>
       <div className='sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-100'>
@@ -28,8 +58,25 @@ export default function ProjectDashboard({ setSidebarOpen }) {
               </div> */}
           <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 space-y-4'>
             {/* Replace with your content */}
-            <ProjectList projects={projects} setFormOpen={setFormOpen} />
-            {formOpen && <ProjectForm projects={projects} setFormOpen={setFormOpen}/>}
+            {!formOpen && (
+              <ProjectList
+                projects={projects}
+                setFormOpen={handleCreateFormOpen}
+                selectProject={handleSelectProject}
+              />
+            )}
+            {formOpen && (
+              <ProjectForm
+                projects={projects}
+                setProjects={setProjects}
+                setFormOpen={setFormOpen}
+                createProject={handleCreateProject}
+                selectedProject={selectedProject}
+                updateProject={handleUpdateProject}
+                deleteProject={handleDeleteProject}
+                key={selectedProject ? selectedProject.id : null}
+              />
+            )}
             {/* /End replace */}
           </div>
         </div>

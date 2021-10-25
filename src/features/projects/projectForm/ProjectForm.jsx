@@ -1,20 +1,60 @@
-import {
-  PlusIcon,
-  CheckCircleIcon,
-  ChevronRightIcon,
-  MailIcon,
-} from '@heroicons/react/solid';
+import { PlusIcon, ChevronRightIcon, MailIcon } from '@heroicons/react/solid';
+import cuid from 'cuid';
+import { useState } from 'react';
 
-export default function ProjectForm({ projects, setFormOpen }) {
+export default function ProjectForm({
+  projects,
+  setProjects,
+  setFormOpen,
+  createProject,
+  selectedProject,
+  updateProject,
+  deleteProject,
+}) {
+  const initialValues = selectedProject ?? {
+    projectName: '',
+    projectCustomer: '',
+    projectDescription: '',
+    projectStart: '',
+    projectFinish: '',
+    projectPurchase: 0,
+    projectSales: 0,
+  };
+
+  const [values, setValues] = useState(initialValues);
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    selectedProject
+      ? updateProject({ ...selectedProject, ...values })
+      : createProject({
+          ...values,
+          id: cuid(),
+          projectFreelancerIds: [],
+          projectFreelancers: [],
+        });
+    setFormOpen(false);
+  }
+
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  }
+
   return (
     <div className='bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200'>
       <div className='px-4 py-5 sm:px-6'>
-        <form className='space-y-8 divide-y divide-gray-200'>
+        <form
+          onSubmit={handleFormSubmit}
+          className='space-y-8 divide-y divide-gray-200'
+        >
           <div className='space-y-8 divide-y divide-gray-200'>
             <div className='pt-8'>
               <div>
                 <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                  Project Information
+                  {selectedProject
+                    ? 'Edit project information'
+                    : 'Create new project'}
                 </h3>
                 <p className='mt-1 text-sm text-gray-500'>
                   Use a permanent address where you can receive mail.
@@ -23,7 +63,7 @@ export default function ProjectForm({ projects, setFormOpen }) {
               <div className='mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
                 <div className='col-span-6 md:col-span-4'>
                   <label
-                    htmlFor='first-name'
+                    htmlFor='projectName'
                     className='block text-sm font-medium text-gray-700'
                   >
                     Project name
@@ -31,17 +71,18 @@ export default function ProjectForm({ projects, setFormOpen }) {
                   <div className='mt-1'>
                     <input
                       type='text'
-                      name='first-name'
-                      id='first-name'
-                      autoComplete='given-name'
+                      name='projectName'
+                      id='projectName'
                       className='shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                      value={values.projectName}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </div>
                 </div>
 
                 <div className='col-span-6 sm:col-span-4'>
                   <label
-                    htmlFor='last-name'
+                    htmlFor='projectDescription'
                     className='block text-sm font-medium text-gray-700'
                   >
                     Project description
@@ -49,17 +90,18 @@ export default function ProjectForm({ projects, setFormOpen }) {
                   <div className='mt-1'>
                     <input
                       type='text'
-                      name='last-name'
-                      id='last-name'
-                      autoComplete='family-name'
+                      name='projectDescription'
+                      id='projectDescription'
                       className='shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                      value={values.projectDescription}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </div>
                 </div>
 
                 <div className='col-span-6 sm:col-span-3'>
                   <label
-                    htmlFor='city'
+                    htmlFor='projectStart'
                     className='block text-sm font-medium text-gray-700'
                   >
                     Project start
@@ -67,17 +109,18 @@ export default function ProjectForm({ projects, setFormOpen }) {
                   <div className='mt-1'>
                     <input
                       type='date'
-                      name='city'
-                      id='city'
-                      autoComplete='address-level2'
+                      name='projectStart'
+                      id='projectStart'
                       className='shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                      value={values.projectStart}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </div>
                 </div>
 
                 <div className='col-span-6 sm:col-span-3'>
                   <label
-                    htmlFor='region'
+                    htmlFor='projectFinish'
                     className='block text-sm font-medium text-gray-700'
                   >
                     Project finish
@@ -85,17 +128,18 @@ export default function ProjectForm({ projects, setFormOpen }) {
                   <div className='mt-1'>
                     <input
                       type='date'
-                      name='region'
-                      id='region'
-                      autoComplete='address-level1'
+                      name='projectFinish'
+                      id='projectFinish'
                       className='shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                      value={values.projectFinish}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </div>
                 </div>
 
                 <div className='col-span-6 sm:col-span-3'>
                   <label
-                    htmlFor='postal-code'
+                    htmlFor='projectPurchase'
                     className='block text-sm font-medium text-gray-700'
                   >
                     Project purchase
@@ -103,16 +147,17 @@ export default function ProjectForm({ projects, setFormOpen }) {
                   <div className='mt-1'>
                     <input
                       type='number'
-                      name='postal-code'
-                      id='postal-code'
-                      autoComplete='postal-code'
+                      name='projectPurchase'
+                      id='projectPurchase'
                       className='shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                      value={values.projectPurchase}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </div>
                 </div>
                 <div className='col-span-6 sm:col-span-3'>
                   <label
-                    htmlFor='postal-code'
+                    htmlFor='projectSales'
                     className='block text-sm font-medium text-gray-700'
                   >
                     Project sales
@@ -120,15 +165,16 @@ export default function ProjectForm({ projects, setFormOpen }) {
                   <div className='mt-1'>
                     <input
                       type='number'
-                      name='postal-code'
-                      id='postal-code'
-                      autoComplete='postal-code'
+                      name='projectSales'
+                      id='projectSales'
                       className='shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                      value={values.projectSales}
+                      onChange={(e) => handleInputChange(e)}
                     />
                   </div>
                 </div>
               </div>
-              <div className='mx-auto pt-10'>
+              {/* <div className='mx-auto pt-10'>
                 <div className='space-y-1'>
                   <label
                     htmlFor='add-team-members'
@@ -208,13 +254,6 @@ export default function ProjectForm({ projects, setFormOpen }) {
                                         Finish:{' '}
                                         <time>{person.freelancerFinish}</time>
                                       </p>
-                                      {/* <p className='mt-2 flex items-center text-sm text-gray-500'>
-                                      <CheckCircleIcon
-                                        className='flex-shrink-0 mr-1.5 h-5 w-5 text-green-400'
-                                        aria-hidden='true'
-                                      />
-                                      {person.stage}
-                                    </p> */}
                                     </div>
                                   </div>
                                   <div className='hidden md:block'>
@@ -225,13 +264,6 @@ export default function ProjectForm({ projects, setFormOpen }) {
                                       <p className='mt-2 flex items-center text-sm text-gray-900'>
                                         Sales: {person.freelanceruales}
                                       </p>
-                                      {/* <p className='mt-2 flex items-center text-sm text-gray-500'>
-                                      <CheckCircleIcon
-                                        className='flex-shrink-0 mr-1.5 h-5 w-5 text-green-400'
-                                        aria-hidden='true'
-                                      />
-                                      {person.stage}
-                                    </p> */}
                                     </div>
                                   </div>
                                 </div>
@@ -249,11 +281,37 @@ export default function ProjectForm({ projects, setFormOpen }) {
                     })}
                   </ul>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
-
-          <div className='pt-5'>
+          <div className='py-3 px-4 flex sm:px-6'>
+                    <button
+                      type='button'
+                      className='bg-red-100 mr-auto border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+                      onClick={() => deleteProject(selectedProject.id)}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      type='button'
+                      //disabled={isSubmitting}
+                      className='bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50'
+                      onClick={() => setFormOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    {/* Kijk voor deze NiceButton: https://humble.dev/creating-a-nice-loading-button-with-react-hooks */}
+                    <button
+                      //isLoading={isSubmitting}
+                      //onClick={() => setIsSaveButtonLoading(true)}
+                      //disabled={!isValid || !dirty || isSubmitting}
+                      type='submit'
+                      className='ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed'
+                    >
+                      Save
+                    </button>
+                  </div>
+          {/* <div className='pt-5'>
             <div className='flex justify-end'>
               <button
                 type='button'
@@ -269,7 +327,7 @@ export default function ProjectForm({ projects, setFormOpen }) {
                 Save
               </button>
             </div>
-          </div>
+          </div> */}
         </form>
         {/* We use less vertical padding on card headers on desktop than on body sections */}
       </div>
