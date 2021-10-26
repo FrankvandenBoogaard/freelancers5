@@ -3,12 +3,13 @@ import {
   CashIcon,
   ChevronRightIcon,
 } from '@heroicons/react/solid';
+import { Link } from 'react-router-dom';
 import ProjectListFreelancer from './ProjectListFreelancer';
 
 export default function ProjectListItem({ project, selectProject }) {
   return (
-    <div
-      onClick={() => selectProject(project)}
+    <Link
+      to={`/projects/${project.id}`}
       className='block hover:bg-gray-50 cursor-pointer'
     >
       <div className='px-4 py-4 flex items-center sm:px-6'>
@@ -68,6 +69,6 @@ export default function ProjectListItem({ project, selectProject }) {
           />
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

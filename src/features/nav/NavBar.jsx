@@ -1,29 +1,42 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   CalendarIcon,
-  ChartBarIcon,
   FolderIcon,
-  HomeIcon,
+  OfficeBuildingIcon,
   InboxIcon,
   UsersIcon,
   XIcon,
+  LogoutIcon,
 } from '@heroicons/react/outline';
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
+  { name: 'Freelancers', to: '/', icon: UsersIcon },
+  { name: 'Projects', to: '/projects', icon: FolderIcon },
+  {
+    name: 'Customers',
+    to: '/customers',
+    icon: OfficeBuildingIcon,
+    current: false,
+  },
+  {
+    name: 'Calendar',
+    to: '/createProject',
+    icon: CalendarIcon,
+    current: false,
+  },
+  { name: 'Testing12', to: '/testCode', icon: InboxIcon },
 ];
+
+const userNavigation = [{ name: 'Sign out', to: '/', icon: LogoutIcon }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function NavBar({ sidebarOpen, setSidebarOpen }) {
+  const { pathname } = useLocation();
   return (
     <>
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -83,19 +96,20 @@ export default function NavBar({ sidebarOpen, setSidebarOpen }) {
                 </div>
                 <nav className='mt-5 px-2 space-y-1'>
                   {navigation.map((item) => (
-                    <a
+                    <Link
                       key={item.name}
-                      href={item.href}
+                      to={item.to}
                       className={classNames(
-                        item.current
+                        pathname === item.to
                           ? 'bg-gray-100 text-gray-900'
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                         'group flex items-center px-2 py-2 text-base font-medium rounded-md'
                       )}
+                      onClick={() => setSidebarOpen(false)}
                     >
                       <item.icon
                         className={classNames(
-                          item.current
+                          pathname === item.to
                             ? 'text-gray-500'
                             : 'text-gray-400 group-hover:text-gray-500',
                           'mr-4 flex-shrink-0 h-6 w-6'
@@ -103,30 +117,55 @@ export default function NavBar({ sidebarOpen, setSidebarOpen }) {
                         aria-hidden='true'
                       />
                       {item.name}
-                    </a>
+                    </Link>
                   ))}
-                </nav>
-              </div>
-              <div className='flex-shrink-0 flex border-t border-gray-200 p-4'>
-                <a href='#' className='flex-shrink-0 group block'>
-                  <div className='flex items-center'>
-                    <div>
-                      <img
-                        className='inline-block h-10 w-10 rounded-full'
-                        src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                        alt=''
-                      />
+                  <div className='pt-5'>
+                    <div className='flex-shrink-0 flex border-t border-gray-200 px-2 pt-4'>
+                      <Link to='/' className='flex-shrink-0 w-full group block'>
+                        <div className='flex items-center'>
+                          <div>
+                            <img
+                              className='inline-block h-9 w-9 rounded-full'
+                              src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+                              alt=''
+                            />
+                          </div>
+                          <div className='ml-3'>
+                            <p className='text-sm font-medium text-gray-700 group-hover:text-gray-900'>
+                              Tom Cook
+                            </p>
+                            <p className='text-xs font-medium text-gray-500 group-hover:text-gray-700'>
+                              View profile
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
                     </div>
-                    <div className='ml-3'>
-                      <p className='text-base font-medium text-gray-700 group-hover:text-gray-900'>
-                        Tom Cook
-                      </p>
-                      <p className='text-sm font-medium text-gray-500 group-hover:text-gray-700'>
-                        View profile
-                      </p>
-                    </div>
+                    {userNavigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.to}
+                        className={classNames(
+                          pathname === item.to
+                            ? 'bg-gray-100 text-gray-900'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                          'group flex items-center px-5 py-2 text-sm font-medium rounded-md'
+                        )}
+                      >
+                        <item.icon
+                          className={classNames(
+                            pathname === item.to
+                              ? 'text-gray-500'
+                              : 'text-gray-400 group-hover:text-gray-500',
+                            'mr-3 flex-shrink-0 h-6 w-6'
+                          )}
+                          aria-hidden='true'
+                        />
+                        {item.name}
+                      </Link>
+                    ))}
                   </div>
-                </a>
+                </nav>
               </div>
             </div>
           </Transition.Child>
@@ -150,11 +189,11 @@ export default function NavBar({ sidebarOpen, setSidebarOpen }) {
             </div>
             <nav className='mt-5 flex-1 px-2 bg-white space-y-1'>
               {navigation.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.to}
                   className={classNames(
-                    item.current
+                    pathname === item.to
                       ? 'bg-gray-100 text-gray-900'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                     'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
@@ -162,7 +201,7 @@ export default function NavBar({ sidebarOpen, setSidebarOpen }) {
                 >
                   <item.icon
                     className={classNames(
-                      item.current
+                      pathname === item.to
                         ? 'text-gray-500'
                         : 'text-gray-400 group-hover:text-gray-500',
                       'mr-3 flex-shrink-0 h-6 w-6'
@@ -170,30 +209,56 @@ export default function NavBar({ sidebarOpen, setSidebarOpen }) {
                     aria-hidden='true'
                   />
                   {item.name}
-                </a>
+                </Link>
               ))}
-            </nav>
-          </div>
-          <div className='flex-shrink-0 flex border-t border-gray-200 p-4'>
-            <a href='#' className='flex-shrink-0 w-full group block'>
-              <div className='flex items-center'>
-                <div>
-                  <img
-                    className='inline-block h-9 w-9 rounded-full'
-                    src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                    alt=''
-                  />
+              <div className='pt-5'>
+                <div className='flex-shrink-0 flex border-t border-gray-200 px-2 pt-4'>
+                  <Link to='/' className='flex-shrink-0 w-full group block'>
+                    <div className='flex items-center'>
+                      <div>
+                        <img
+                          className='inline-block h-9 w-9 rounded-full'
+                          src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+                          alt=''
+                        />
+                      </div>
+                      <div className='ml-3'>
+                        <p className='text-sm font-medium text-gray-700 group-hover:text-gray-900'>
+                          Tom Cook
+                        </p>
+                        <p className='text-xs font-medium text-gray-500 group-hover:text-gray-700'>
+                          View profile
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-                <div className='ml-3'>
-                  <p className='text-sm font-medium text-gray-700 group-hover:text-gray-900'>
-                    Tom Cook
-                  </p>
-                  <p className='text-xs font-medium text-gray-500 group-hover:text-gray-700'>
-                    View profile
-                  </p>
-                </div>
+
+                {userNavigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.to}
+                    className={classNames(
+                      pathname === item.to
+                        ? 'bg-gray-100 text-gray-900'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                      'group flex items-center px-5 py-2 text-sm font-medium rounded-md'
+                    )}
+                  >
+                    <item.icon
+                      className={classNames(
+                        pathname === item.to
+                          ? 'text-gray-500'
+                          : 'text-gray-400 group-hover:text-gray-500',
+                        'mr-3 flex-shrink-0 h-6 w-6'
+                      )}
+                      aria-hidden='true'
+                    />
+                    {item.name}
+                  </Link>
+                ))}
               </div>
-            </a>
+            </nav>
           </div>
         </div>
       </div>
